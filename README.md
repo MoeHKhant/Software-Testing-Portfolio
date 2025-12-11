@@ -25,7 +25,7 @@ My background shaped me into a patient, logical and detail-driven problem solver
 This repository demonstrates my practical QA skills through real testing artefacts.
 
 ### **📁 1. Test Cases**
-Located in: `/test-cases`
+Located in: `/Test-Cases`
 
 Examples:
 - Login Test Case  
@@ -43,7 +43,7 @@ Each test case includes:
 ---
 
 ### **🐞 2. Bug Reports**
-Located in: `/bug-reports`
+Located in: `/Bug-Reports`
 
 Includes:
 - Clear reproduction steps  
@@ -57,7 +57,7 @@ Bug reports show how I identify issues and communicate them effectively for deve
 ---
 
 ### **🔗 3. API Testing (Postman Collection)**
-Located in: `/api-tests`
+Located in: `/Api-Tests`
 
 Collection name: **Moe’s API Testing Collection**
 
