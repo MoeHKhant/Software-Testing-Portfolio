@@ -1,0 +1,170 @@
+{
+  "info": {
+    "_postman_id": "a1c7e311-54d8-4de3-88ce-4a713e4c89d0",
+    "name": "Moe's API Testing Collection",
+    "description": "A beginner–intermediate API testing workflow (Login → Create User → Get User → Delete User) created by Moe Hein Khant.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "Moe Hein Khant"
+  },
+  "item": [
+    {
+      "name": "1. Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"username\": \"testuser\",\n    \"password\": \"password123\"\n}"
+        },
+        "url": {
+          "raw": "https://reqres.in/api/login",
+          "protocol": "https",
+          "host": ["reqres", "in"],
+          "path": ["api", "login"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 or 400\", function() {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 400]);",
+              "});",
+              "",
+              "if (pm.response.code === 200) {",
+              "    var jsonData = pm.response.json();",
+              "    pm.environment.set(\"token\", jsonData.token);",
+              "    pm.test(\"Token exists\", function() {",
+              "        pm.expect(jsonData.token).to.not.be.undefined;",
+              "    });",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Create User",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"Moe Tester\",\n    \"job\": \"QA Analyst\"\n}"
+        },
+        "url": {
+          "raw": "https://reqres.in/api/users",
+          "protocol": "https",
+          "host": ["reqres", "in"],
+          "path": ["api", "users"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 201\", function () {",
+              "    pm.expect(pm.response.code).to.eql(201);",
+              "});",
+              "",
+              "var data = pm.response.json();",
+              "pm.environment.set(\"user_id\", data.id);",
+              "",
+              "pm.test(\"User ID saved\", function() {",
+              "    pm.expect(pm.environment.get(\"user_id\")).to.not.be.undefined;",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Get User Details",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "https://reqres.in/api/users/{{user_id}}",
+          "protocol": "https",
+          "host": ["reqres", "in"],
+          "path": ["api", "users", "{{user_id}}"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200 or 404\", function() {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+              "});",
+              "",
+              "if (pm.response.code === 200) {",
+              "    pm.test(\"User has a valid structure\", function() {",
+              "        var jsonData = pm.response.json();",
+              "        pm.expect(jsonData.data.id).to.exist;",
+              "        pm.expect(jsonData.data.email).to.include('@');",
+              "    });",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Delete User",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "https://reqres.in/api/users/{{user_id}}",
+          "protocol": "https",
+          "host": ["reqres", "in"],
+          "path": ["api", "users", "{{user_id}}"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Delete returns 204\", function () {",
+              "    pm.expect(pm.response.code).to.eql(204);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    }
+  ]
+}
